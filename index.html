@@ -90,11 +90,11 @@
         </div>
         <div class="add-memo-form">
             <h2>添加新备忘录</h2>
-            <form id="memoForm">
+            <form id="memoForm" enctype="multipart/form-data">
                 <input type="text" id="productName" name="productName" placeholder="产品名称" required>
                 <textarea id="productDescription" name="productDescription" placeholder="描述" required></textarea>
-                <input type="url" id="productImage" name="productImage" placeholder="图片URL">
-                <button type="submit">添加</button>
+                <input type="file" id="productImage" name="productImage" accept="image/*">
+                <button type="button" onclick="uploadImage()">上传图片</button>
             </form>
         </div>
         <div class="memo-list" id="memo-list">
@@ -115,7 +115,9 @@
     <script>
         document.getElementById('memoForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            addMemo();
+            // 此处不直接提交表单，因为需要使用 fetch 或 XMLHttpRequest 进行异步上传
+            // 可以在 uploadImage 函数中处理上传逻辑
+            alert('请点击上传图片按钮进行上传');
         });
 
         function searchMemos() {
@@ -135,30 +137,50 @@
             }
         }
 
-        function addMemo() {
+        function uploadImage() {
+            var formData = new FormData();
             var productName = document.getElementById('productName').value;
             var productDescription = document.getElementById('productDescription').value;
-            var productImage = document.getElementById('productImage').value;
+            var fileInput = document.getElementById('productImage').files[0];
 
-            if (productName && productDescription) {
-                var memoList = document.getElementById('memo-list');
-                var newMemo = document.createElement('div');
-                newMemo.className = 'memo';
-                
-                var memoContent = `
-                    <p><strong>产品名称：</strong>${productName}</p>
-                    <p><strong>描述：</strong>${productDescription}</p>
-                    <img src="${productImage}" alt="${productName}图片">
-                `;
-                
-                newMemo.innerHTML = memoContent;
-                memoList.appendChild(newMemo);
-
-                // 清空表单
-                document.getElementById('memoForm').reset();
-            } else {
-                alert('请填写产品名称和描述');
+            if (!productName || !productDescription || !fileInput) {
+                alert('请填写产品名称、描述并选择图片');
+                return;
             }
+
+            formData.append('productName', productName);
+            formData.append('productDescription', productDescription);
+            formData.append('productImage', fileInput);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var imageUrl = data.imageUrl; // 假设服务器返回的数据包含图片URL
+                addMemoWithImage(productName, productDescription, imageUrl);
+                document.getElementById('memoForm').reset(); // 清空表单
+            })
+            .catch(error => {
+                console.error('上传图片出错:', error);
+                alert('上传图片出错，请重试');
+            });
+        }
+
+        function addMemoWithImage(productName, productDescription, imageUrl) {
+            var memoList = document.getElementById('memo-list');
+            var newMemo = document.createElement('div');
+            newMemo.className = 'memo';
+            
+            var memoContent = `
+                <p><strong>产品名称：</strong>${productName}</p>
+                <p><strong>描述：</strong>${productDescription}</p>
+                <img src="${imageUrl}" alt="${productName}图片">
+            `;
+            
+            newMemo.innerHTML = memoContent;
+            memoList.appendChild(newMemo);
         }
     </script>
 </body>
