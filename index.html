@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人网页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #0066cc;
+        }
+        .info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        .memo-list {
+            margin-bottom: 20px;
+        }
+        .memo {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .memo img {
+            max-width: 100%;
+            height: auto;
+        }
+        .highlight {
+            color: #ff0000;
+        }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0055aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>个人网页</h1>
+        </header>
+        <div class="info">
+            <p><strong>姓名：</strong>张三</p>
+            <p><strong>公司：</strong>ABC公司</p>
+            <p><strong>联系方式：</strong>example@example.com</p>
+            <p><strong>职位：</strong>产品经理</p>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="输入关键词搜索备忘录">
+            <button onclick="searchMemos()">搜索</button>
+        </div>
+        <div class="memo-list" id="memo-list">
+            <!-- 备忘录示例 -->
+            <div class="memo">
+                <p><strong>产品名称：</strong>产品A</p>
+                <p><strong>描述：</strong>这是产品A的描述。</p>
+                <img src="productA.jpg" alt="产品A图片">
+            </div>
+            <div class="memo">
+                <p><strong>产品名称：</strong>产品B</p>
+                <p><strong>描述：</strong>这是产品B的描述。</p>
+                <img src="productB.jpg" alt="产品B图片">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchMemos() {
+            var input, filter, memos, memo, i, txtValue;
+            input = document.getElementById('search');
+            filter = input.value.toLowerCase();
+            memos = document.getElementsByClassName('memo');
+            
+            for (i = 0; i < memos.length; i++) {
+                memo = memos[i];
+                txtValue = memo.textContent || memo.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    memo.style.display = "";
+                } else {
+                    memo.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
