@@ -52,10 +52,10 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        input[type="text"] {
+        input[type="text"], textarea {
             padding: 10px;
             width: 80%;
-            margin-right: 10px;
+            margin: 5px 0;
         }
         button {
             padding: 10px 20px;
@@ -66,6 +66,10 @@
         }
         button:hover {
             background-color: #0055aa;
+        }
+        .add-memo-form {
+            margin-bottom: 20px;
+            text-align: center;
         }
     </style>
 </head>
@@ -83,6 +87,13 @@
         <div class="search-bar">
             <input type="text" id="search" placeholder="输入关键词搜索备忘录">
             <button onclick="searchMemos()">搜索</button>
+        </div>
+        <div class="add-memo-form">
+            <h2>添加新备忘录</h2>
+            <input type="text" id="productName" placeholder="产品名称">
+            <textarea id="productDescription" placeholder="描述"></textarea>
+            <input type="text" id="productImage" placeholder="图片URL">
+            <button onclick="addMemo()">添加</button>
         </div>
         <div class="memo-list" id="memo-list">
             <!-- 备忘录示例 -->
@@ -114,6 +125,34 @@
                 } else {
                     memo.style.display = "none";
                 }
+            }
+        }
+
+        function addMemo() {
+            var productName = document.getElementById('productName').value;
+            var productDescription = document.getElementById('productDescription').value;
+            var productImage = document.getElementById('productImage').value;
+
+            if (productName && productDescription) {
+                var memoList = document.getElementById('memo-list');
+                var newMemo = document.createElement('div');
+                newMemo.className = 'memo';
+                
+                var memoContent = `
+                    <p><strong>产品名称：</strong>${productName}</p>
+                    <p><strong>描述：</strong>${productDescription}</p>
+                    <img src="${productImage}" alt="${productName}图片">
+                `;
+                
+                newMemo.innerHTML = memoContent;
+                memoList.appendChild(newMemo);
+
+                // 清空表单
+                document.getElementById('productName').value = '';
+                document.getElementById('productDescription').value = '';
+                document.getElementById('productImage').value = '';
+            } else {
+                alert('请填写产品名称和描述');
             }
         }
     </script>
